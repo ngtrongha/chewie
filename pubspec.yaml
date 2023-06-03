@@ -12,7 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.3
-  video_player: ^2.4.7
+  ext_video_player:
+    git: https://github.com/ngtrongha/ext_video_player.git
   wakelock: ^0.6.2
 
 dev_dependencies:

@@ -1,6 +1,6 @@
 import 'package:chewie/chewie.dart';
+import 'package:ext_video_player/ext_video_player.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 class VideoProgressBar extends StatefulWidget {
   VideoProgressBar(
@@ -59,7 +59,7 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
 
   void _seekToRelativePosition(Offset globalPosition) {
     controller.seekTo(context.calcRelativePosition(
-      controller.value.duration,
+      controller.value.duration ?? Duration.zero,
       globalPosition,
     ));
   }
@@ -80,7 +80,7 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
     return chewieController.draggableProgressBar
         ? GestureDetector(
             onHorizontalDragStart: (DragStartDetails details) {
-              if (!controller.value.isInitialized) {
+              if (!controller.value.initialized) {
                 return;
               }
               _controllerWasPlaying = controller.value.isPlaying;
@@ -91,7 +91,7 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
               widget.onDragStart?.call();
             },
             onHorizontalDragUpdate: (DragUpdateDetails details) {
-              if (!controller.value.isInitialized) {
+              if (!controller.value.initialized) {
                 return;
               }
               _latestDraggableOffset = details.globalPosition;
@@ -112,7 +112,7 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
               widget.onDragEnd?.call();
             },
             onTapDown: (TapDownDetails details) {
-              if (!controller.value.isInitialized) {
+              if (!controller.value.initialized) {
                 return;
               }
               _seekToRelativePosition(details.globalPosition);
@@ -152,7 +152,7 @@ class StaticProgressBar extends StatelessWidget {
         painter: _ProgressBarPainter(
           value: value,
           draggableValue: context.calcRelativePosition(
-            value.duration,
+            value.duration!,
             latestDraggableOffset,
           ),
           colors: colors,
@@ -202,18 +202,18 @@ class _ProgressBarPainter extends CustomPainter {
       ),
       colors.backgroundPaint,
     );
-    if (!value.isInitialized) {
+    if (!value.initialized) {
       return;
     }
     final double playedPartPercent = (draggableValue != Duration.zero
             ? draggableValue.inMilliseconds
             : value.position.inMilliseconds) /
-        value.duration.inMilliseconds;
+        value.duration!.inMilliseconds;
     final double playedPart =
         playedPartPercent > 1 ? size.width : playedPartPercent * size.width;
     for (final DurationRange range in value.buffered) {
-      final double start = range.startFraction(value.duration) * size.width;
-      final double end = range.endFraction(value.duration) * size.width;
+      final double start = range.startFraction(value.duration!) * size.width;
+      final double end = range.endFraction(value.duration!) * size.width;
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromPoints(
