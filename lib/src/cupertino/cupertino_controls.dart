@@ -346,7 +346,8 @@ class _CupertinoControlsState extends State<CupertinoControls>
   }
 
   Widget _buildHitArea() {
-    final bool isFinished = _latestValue.position >= _latestValue.duration!;
+    final bool isFinished = _latestValue.position >=
+        (_latestValue.duration ?? const Duration(seconds: 1));
     final bool showPlayButton =
         widget.showPlayButton && !_latestValue.isPlaying && !_dragging;
 
@@ -455,7 +456,8 @@ class _CupertinoControlsState extends State<CupertinoControls>
   }
 
   Widget _buildRemaining(Color iconColor) {
-    final position = _latestValue.duration! - _latestValue.position;
+    final position = (_latestValue.duration ?? const Duration(seconds: 1)) -
+        _latestValue.position;
 
     return Padding(
       padding: const EdgeInsets.only(right: 12.0),
@@ -724,7 +726,8 @@ class _CupertinoControlsState extends State<CupertinoControls>
   }
 
   void _playPause() {
-    final isFinished = _latestValue.position >= _latestValue.duration!;
+    final isFinished = _latestValue.position >=
+        (_latestValue.duration ?? const Duration(seconds: 1));
 
     setState(() {
       if (controller.value.isPlaying) {
@@ -758,7 +761,8 @@ class _CupertinoControlsState extends State<CupertinoControls>
 
   void _skipForward() {
     _cancelAndRestartTimer();
-    final end = _latestValue.duration!.inMilliseconds;
+    final end =
+        (_latestValue.duration ?? const Duration(seconds: 1)).inMilliseconds;
     final skip =
         (_latestValue.position + const Duration(seconds: 15)).inMilliseconds;
     controller.seekTo(Duration(milliseconds: math.min(skip, end)));

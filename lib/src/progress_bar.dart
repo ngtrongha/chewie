@@ -59,7 +59,7 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
 
   void _seekToRelativePosition(Offset globalPosition) {
     controller.seekTo(context.calcRelativePosition(
-      controller.value.duration ?? Duration.zero,
+      controller.value.duration ?? const Duration(seconds: 1),
       globalPosition,
     ));
   }
@@ -152,7 +152,7 @@ class StaticProgressBar extends StatelessWidget {
         painter: _ProgressBarPainter(
           value: value,
           draggableValue: context.calcRelativePosition(
-            value.duration!,
+            value.duration ?? const Duration(seconds: 1),
             latestDraggableOffset,
           ),
           colors: colors,
@@ -208,12 +208,16 @@ class _ProgressBarPainter extends CustomPainter {
     final double playedPartPercent = (draggableValue != Duration.zero
             ? draggableValue.inMilliseconds
             : value.position.inMilliseconds) /
-        value.duration!.inMilliseconds;
+        (value.duration ?? const Duration(seconds: 1)).inMilliseconds;
     final double playedPart =
         playedPartPercent > 1 ? size.width : playedPartPercent * size.width;
     for (final DurationRange range in value.buffered) {
-      final double start = range.startFraction(value.duration!) * size.width;
-      final double end = range.endFraction(value.duration!) * size.width;
+      final double start =
+          range.startFraction((value.duration ?? const Duration(seconds: 1))) *
+              size.width;
+      final double end =
+          range.endFraction((value.duration ?? const Duration(seconds: 1))) *
+              size.width;
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromPoints(

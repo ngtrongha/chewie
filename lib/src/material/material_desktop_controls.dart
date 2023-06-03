@@ -327,7 +327,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
   }
 
   Widget _buildHitArea() {
-    final bool isFinished = _latestValue.position >= _latestValue.duration!;
+    final bool isFinished = _latestValue.position >=
+        (_latestValue.duration ?? const Duration(seconds: 1));
     final bool showPlayButton =
         widget.showPlayButton && !_dragging && !notifier.hideStuff;
 
@@ -497,7 +498,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
   }
 
   void _playPause() {
-    final isFinished = _latestValue.position >= _latestValue.duration!;
+    final isFinished = _latestValue.position >=
+        (_latestValue.duration ?? const Duration(seconds: 1));
 
     setState(() {
       if (controller.value.isPlaying) {
